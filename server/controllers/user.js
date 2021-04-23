@@ -5,7 +5,7 @@ import User from '../models/user.js'
 
 export const signIn = async(req, res) => {
     const { email, password } = req.body
-    console.log(process.env.TOKEN_SECRET)
+    
     try {
         const existingUser = await User.findOne({ email })
 
