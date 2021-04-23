@@ -4,31 +4,47 @@ import { GoogleLogin } from 'react-google-login'
 import LockOutlineIcon from '@material-ui/icons/LockOutlined'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { signUp, signIn } from '../../actions/auth'
 
 import useStyles from './styles'
 import Input from './Input'
 import Icon from './Icon'
 
+const initialState = {
+    firstName: '',
+    lastName: '',
+    email:'',
+    password: '',
+    confirmPassword: '',
+}
+
 const Auth = () => {
     const classes = useStyles()
     const [showPassword, setShowPassword] = useState(false)
     const [isSignup, setIsSignup] = useState(false)
+    const [formData, setFormData] = useState(initialState)
     const dispatch = useDispatch()
     const history = useHistory()
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if(isSignup) {
+            dispatch(signUp(formData, history))
+        }else {
+            dispatch(signIn(formData, history))
 
+        }
     }
     
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
     
     const switchMode = () => {
         setIsSignup((prevIsSignup) => !prevIsSignup)
-        handleShowPassword(false)
+        setShowPassword(false)
     }
     
     const googleSuccess = async(res) => {
@@ -62,14 +78,14 @@ const Auth = () => {
                                     <Input 
                                         name="firstName" 
                                         label="First Name"
-                                        onChange={handleChange}
+                                        handleChange={handleChange}
                                         autoFocus
                                         half
                                     />
                                     <Input 
                                         name="lastName" 
                                         label="Last Name"
-                                        onChange={handleChange}
+                                        handleChange={handleChange}
                                         half
                                     />
                                 </>
@@ -78,13 +94,13 @@ const Auth = () => {
                         <Input 
                             name="email" 
                             label="Email Address"
-                            onChange={handleChange}
+                            handleChange={handleChange}
                             type="email"
                         />
                         <Input 
                             name="password" 
                             label="Password"
-                            onChange={handleChange}
+                            handleChange={handleChange}
                             type={showPassword ? "text" : "password"}
                             handleShowPassword={handleShowPassword}
                         />
@@ -92,7 +108,7 @@ const Auth = () => {
                             <Input 
                                 name="confirmPassword" 
                                 label="Confirm Password"
-                                onChange={handleChange}
+                                handleChange={handleChange}
                                 type={showPassword ? "text" : "password"}
                                 handleShowPassword={handleShowPassword}
                             />
