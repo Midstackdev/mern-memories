@@ -1,6 +1,4 @@
-import react from 'react'
 import { Container } from '@material-ui/core'
-
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 

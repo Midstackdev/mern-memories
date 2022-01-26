@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { Card, Typography, Divider, Paper, CircularProgress } from '@material-ui/core'
+import { Typography, Divider, Paper, CircularProgress } from '@material-ui/core'
 import moment from 'moment'
-import { useHistory, useLocation, useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 
 import useStyles from './styles'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,11 +16,11 @@ const PostDetails = () => {
 
     useEffect(() => {
         dispatch(getPost(id))
-    }, [id])
+    }, [dispatch, id])
 
     useEffect(() => {
         dispatch(getPostsBySearch({ search: 'none', tags: post?.tags.join(',') }))
-    }, [post])
+    }, [dispatch, post])
 
     if(!post) return null
 
@@ -66,7 +66,7 @@ const PostDetails = () => {
                                 <Typography gutterBottom variant="subtitle2">{name}</Typography>
                                 <Typography gutterBottom variant="subtitle2">{message}</Typography>
                                 <Typography gutterBottom variant="subtitle1">Likes: {likes.length}</Typography>
-                                <img src={selectedFile} width="200px" />
+                                <img src={selectedFile} width="200px" alt=''/>
                             </div>
                         ))}
                     </div>

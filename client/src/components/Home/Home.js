@@ -1,7 +1,7 @@
-import React, { useState, useEffect }from 'react'
+import React, { useState }from 'react'
 import { Container, Grow, Grid, Paper, AppBar, TextField, Button } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { getPosts, getPostsBySearch } from '../../actions/posts'
+import { getPostsBySearch } from '../../actions/posts'
 import { useHistory, useLocation } from 'react-router'
 
 import ChipInput from 'material-ui-chip-input'
@@ -50,7 +50,7 @@ const Home = () => {
     return (
         <Grow in>
         <Container maxWidth="xl">
-          <Grid className={classes.mainContainer} container justify="space-between" alignItems="stretch" spacing={3} className={classes.gridContainer}>
+          <Grid container justify="space-between" alignItems="stretch" spacing={3} className={classes.gridContainer}>
             <Grid item xs={12} sm={6} md={9}>
               <Posts setCurrentId={setCurrentId} />
             </Grid>

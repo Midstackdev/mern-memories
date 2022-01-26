@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "start-dev": "yarn build & node index.js",
+    "build": "cd ../client && yarn run build",
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,0 +1,82 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # test_frontend:
+  #   runs-on: self-hosted
+  #   env:
+  #     working-directory: ./client
+  #   strategy:
+  #     matrix:
+  #       node-version: [14.x]
+
+  #   steps:
+  #     - name: Checkout the repo
+  #       uses: actions/checkout@v2
+  #     - name: Use Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - run: yarn install
+  #       working-directory: ${{ env.working-directory }}
+  #     # - run: npm test
+  #     #   working-directory: ${{ env.working-directory }}
+  #       env:
+  #         CI: true
+
+  test_backend:
+    runs-on: self-hosted
+    env:
+      server: ./server
+      client: ./client
+      variables: ./.github/actions/env.txt
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with: 
+          clean: 'false'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      # - name: Store variables
+      #   run: |
+      #     touch .env
+      #     echo 'NODE_ENV=${{ secrets.NODE_ENV }} PORT=${{ secrets.PORT }} JWT_SECRET=${{ secrets.JWT_SECRET }} CONNECTION_URL=${{ secrets.CONNECTION_URL }}' >> .env
+      #   working-directory: ${{ env.server }}
+      # - name: Leak variables
+      #   run: |
+      #     ls -al
+      #     cat .env
+      #     cat .env | hexdump
+      #   working-directory: ${{ env.server }}
+      - name: Npm install server
+        run: yarn install
+        working-directory: ${{ env.server }}
+      - name: Npm install client
+        run: yarn install
+        working-directory: ${{ env.client }}
+      - name: Build the client
+        run: yarn run build --if-present
+        working-directory: ${{ env.client }}
+      # - run: npm test --if-present
+      #   working-directory: ${{ env.server }}
+      - run: |
+          pm2 stop 1
+          pm2 start 1
+          pm2 save
+          sudo service nginx restart
+        working-directory: ${{ env.server }}
+        env:
+          CI: true
